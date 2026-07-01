@@ -1,0 +1,59 @@
+{
+  "name": "dresscodec",
+  "version": "0.1.0",
+  "description": "A reversible codec: JSON, text, or bytes <-> a compact, formattable string. Not a crypto digest.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "codec",
+    "encode",
+    "decode",
+    "base62",
+    "base58",
+    "reversible",
+    "schema",
+    "preset",
+    "seed"
+  ],
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./transforms": {
+      "types": "./dist/transforms.d.ts",
+      "import": "./dist/transforms.js",
+      "require": "./dist/transforms.cjs"
+    }
+  },
+  "sideEffects": [
+    "./dist/transforms.js",
+    "./dist/transforms.cjs"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "npm run build && node --test test/",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "fflate": "^0.8.2"
+  },
+  "peerDependenciesMeta": {
+    "fflate": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "fflate": "^0.8.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
