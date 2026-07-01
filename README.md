@@ -117,4 +117,4 @@ Importing `dresscodec/transforms` registers `deflate` by name, so readers using
 
 ## License
 
-MIT
+MIT — Alexander Schornberg

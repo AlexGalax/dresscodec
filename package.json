@@ -1,8 +1,14 @@
 {
   "name": "dresscodec",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A reversible codec: JSON, text, or bytes <-> a compact, formattable string. Not a crypto digest.",
+
+  "author": "Alexander Schornberg",
   "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/AlexGalax/dresscodec.git" },
+  "homepage": "https://github.com/AlexGalax/dresscodec#readme",
+  "bugs": { "url": "https://github.com/AlexGalax/dresscodec/issues" },
+
   "type": "module",
   "keywords": [
     "codec",
