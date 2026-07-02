@@ -1,6 +1,6 @@
 {
   "name": "dresscodec",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A reversible codec: JSON, text, or bytes <-> a compact, formattable string. Not a crypto digest.",
   "author": "Alexander Schornberg",
   "license": "MIT",
