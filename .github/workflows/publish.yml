@@ -1,8 +1,7 @@
 name: Publish to npm
 
-# Publishes this package to npm via npm Trusted Publishing (OIDC — no token).
-# Triggers when a GitHub Release is published (tag it to match the version,
-# e.g. v1.0.3), or manually via the Actions tab.
+# Publishes to npm via Trusted Publishing (OIDC — no token). Triggers on a
+# published GitHub Release, or manually via the Actions tab.
 on:
   release:
     types: [published]
@@ -18,19 +17,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # NOTE: no `registry-url:` here on purpose. It would write an .npmrc with
-      # an empty `_authToken`, which shadows OIDC and makes `npm publish` fall
-      # back to anonymous auth (→ 404). Without it, Trusted Publishing works.
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          registry-url: https://registry.npmjs.org
 
-      # Trusted Publishing needs npm >= 11.5.1, newer than the bundled npm.
+      # Trusted Publishing needs npm >= 11.5.1 (newer than the bundled npm).
       - name: Update npm
         run: npm install -g npm@latest
 
-      - name: Versions
-        run: node -v && npm -v
+      # Fail loudly (with the actual versions) if the prerequisites are missing.
+      - name: Check prerequisites
+        run: |
+          echo "node: $(node -v)"
+          echo "npm:  $(npm -v)"
+          echo "OIDC token URL present: ${ACTIONS_ID_TOKEN_REQUEST_URL:+yes}"
+          node -e 'const v=require("child_process").execSync("npm -v").toString().trim(); const [a,b,c]=v.split(".").map(Number); const ok=a>11||(a===11&&(b>5||(b===5&&c>=1))); if(!ok){console.error(`npm ${v} is too old for Trusted Publishing (need >= 11.5.1)`);process.exit(1)} console.log(`npm ${v} OK`)'
+          test -n "$ACTIONS_ID_TOKEN_REQUEST_URL" || { echo "OIDC token not available — is 'permissions: id-token: write' set?"; exit 1; }
 
       - name: Install
         run: npm install
@@ -38,6 +41,6 @@ jobs:
       - name: Test
         run: npm test
 
-      # Auth comes from the OIDC id-token; provenance is attached automatically.
+      # No NODE_AUTH_TOKEN: auth comes from the OIDC id-token.
       - name: Publish
         run: npm publish --access public
