@@ -11,9 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # registry-url configures the registry in .npmrc so npm runs the OIDC
+      # exchange for it. Do NOT set NODE_AUTH_TOKEN — with npm >= 11.5.1 the
+      # empty _authToken line is ignored and Trusted Publishing (OIDC) is used.
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
+          registry-url: https://registry.npmjs.org
       - name: Update npm
         run: npm install -g npm@latest
       - name: Diagnostics
@@ -21,6 +25,7 @@ jobs:
           echo "npm: $(npm -v)"
           echo "registry: $(npm config get registry)"
           echo "NODE_AUTH_TOKEN set? ${NODE_AUTH_TOKEN:+YES-THIS-IS-BAD}"
+          echo "OIDC available? ${ACTIONS_ID_TOKEN_REQUEST_URL:+yes}"
       - run: npm install
       - run: npm test
-      - run: npm publish --access public
+      - run: npm publish
