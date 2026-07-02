@@ -14,6 +14,13 @@ A **Reader** is the dress code for your data (character set, format, schema). It
 turns a value into a hash; share both as a **Key** or a self-contained
 **pack token**.
 
+## Try it online
+
+Build a reader and encode/decode hashes interactively — no install — at
+**[alexgalax.com/dresscodec](https://www.alexgalax.com/dresscodec)**. Configure
+the alphabet, format, and schema, then copy the generated **Reader-Key** and drop
+it straight into your code with `importReader(key)`.
+
 ## Install
 
 ```bash
