@@ -2,7 +2,7 @@ name: Publish to npm
 
 # Publishes this package to npm via npm Trusted Publishing (OIDC — no token).
 # Triggers when a GitHub Release is published (tag it to match the version,
-# e.g. v1.0.2), or manually via the Actions tab.
+# e.g. v1.0.3), or manually via the Actions tab.
 on:
   release:
     types: [published]
@@ -18,14 +18,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # NOTE: no `registry-url:` here on purpose. It would write an .npmrc with
+      # an empty `_authToken`, which shadows OIDC and makes `npm publish` fall
+      # back to anonymous auth (→ 404). Without it, Trusted Publishing works.
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          registry-url: https://registry.npmjs.org
+          node-version: 22
 
-      # Trusted Publishing needs npm >= 11.5.1, newer than Node 20's bundled npm.
+      # Trusted Publishing needs npm >= 11.5.1, newer than the bundled npm.
       - name: Update npm
         run: npm install -g npm@latest
+
+      - name: Versions
+        run: node -v && npm -v
 
       - name: Install
         run: npm install
@@ -33,7 +38,6 @@ jobs:
       - name: Test
         run: npm test
 
-      # No NODE_AUTH_TOKEN: auth comes from the OIDC id-token. Provenance is
-      # attached automatically when publishing this way.
+      # Auth comes from the OIDC id-token; provenance is attached automatically.
       - name: Publish
         run: npm publish --access public
